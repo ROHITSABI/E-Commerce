@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Commerce Website</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style></style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#"
+          ><i class="fa-solid fa-cart-shopping" style="color: #ffd43b"></i>Cozy
+          <span>Cove</span></a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" href="#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Pricing</a>
+            </li> -->
+            <!-- =================== -->
+
+            <!-- ================= -->
+            <li class="nav-item">
+              <a class="nav-link" href="./user/login.html">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./user/signup.html">Signup</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./admin/login.html">Admin</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="main1">
+      <div class="leftSide">
+        <h2 class="main1Title">
+          A better way to talk <br />
+          with your customers
+        </h2>
+        <p class="main1Content">
+          Creating and distributing valuable, relevant, and engaging content
+          such as blog posts, articles, video content, social media posts,
+          product descriptions, and customer reviews to attract and engage
+          prospective customers.
+        </p>
+        <div class="btns">
+          <a href="user/login.html">
+            <button class="btn1">Try for Free</button>
+          </a>
+
+          <a href="user/signup.html">
+            <button class="btn2">Get A Demo</button>
+          </a>
+        </div>
+      </div>
+      <div class="rightSide">
+        <div class="contentImg">
+          <a href="#" rel="p1" class="thumbnail_img"
+            ><img src="./img/backpack.jpg" alt=""
+          /></a>
+          <p class="contentRightSide">
+            Our premium leather backpack is designed for the modern traveler.
+            Made with 100% genuine leather, it features a spacious main
+            compartment, two front zippered pockets for easy access, and padded
+            straps for ultimate comfort.
+          </p>
+        </div>
+
+        <div class="contentImg">
+          <img src="./img/bottle.jpg" alt="" />
+          <p class="contentRightSide">
+            Stay hydrated and environmentally conscious with the EcoTech Smart
+            Water Bottle. Made from 100% BPA-free stainless steel, this bottle
+            features a built-in hydration tracker that syncs with your phone to
+            remind you when to drink.
+          </p>
+        </div>
+
+        <div class="contentImg">
+          <img src="./img/lamp.jpg" alt="" />
+          <p class="contentRightSide">
+            Brighten up your workspace with the UrbanGlow LED Desk Lamp,
+            designed for both style and functionality. With adjustable
+            brightness levels and a flexible arm, this lamp allows you to
+            customize the light for reading, working, or relaxing.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="main2">
+      <div class="main2Sofa">
+        <p>Going, Going, Almost Gone</p>
+        <h2 class="main2Title">
+          <span>up to 60% off </span><br />20th December event
+        </h2>
+        <button class="main2Btn">Shop Deals</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="slideshow-container">
+        <h2 class="slideTitle">Our products</h2>
+        <div class="slideshow" id="productItem">
+          <!-- <div class="slide">
+            <img src="img/backpack.jpg" alt="Image 1" />
+            <div class="caption">Image Name 1</div>
+          </div> -->
+        </div>
+
+        <!-- <div class="slideshow">
+          <div class="slide">
+            <img src="img/backpack.jpg" alt="Image 1" />
+            <div class="caption">Image Name 1</div>
+          </div>
+          <div class="slide">
+            <img src="img/bottle.jpg" alt="Image 2" />
+            <div class="caption">Image Name 2</div>
+          </div>
+          <div class="slide">
+            <img src="img/e-commerce-1.jpg" alt="Image 3" />
+            <div class="caption">Image Name 3</div>
+          </div>
+          <div class="slide">
+            <img src="img/e-commerce-2.jpg" alt="Image 4" />
+            <div class="caption">Image Name 4</div>
+          </div>
+
+          <div class="slide">
+            <img src="img/e-commerce-3.jpg" alt="Image 4" />
+            <div class="caption">Image Name 4</div>
+          </div>
+
+          <div class="slide">
+            <img src="img/e-commerce-4.avif" alt="Image 4" />
+            <div class="caption">Image Name 4</div>
+          </div>
+        </div> -->
+      </div>
+    </section>
+
+    <section>
+      <div class="backImage">
+        <div class="ImageContent">
+          <p class="bg1">Treat Yourself to Something Special!!!</p>
+          <p class="bg2">From Us, With Love</p>
+        </div>
+      </div>
+
+      <div class="cardsLike">
+        <div class="content1">
+          <h3 class="title">Gift Cards</h3>
+          <p class="titleCont">
+            Surprise someone with the gift of endless possibilities.
+          </p>
+          <a href="">See More</a>
+        </div>
+        <div class="content1">
+          <h3 class="title">Holiday Hours</h3>
+          <p class="titleCont">We're open to serve you this holiday season!</p>
+          <a href="">See More</a>
+        </div>
+        <div class="content1">
+          <h3 class="title">Seasonal Savings</h3>
+          <p class="titleCont">
+            Celebrate the season with unbeatable discounts on your favorite
+            products!
+          </p>
+          <a href="">See More</a>
+        </div>
+        <div class="content1">
+          <h3 class="title">Spotlight Products</h3>
+          <p class="titleCont">
+            Check out our handpicked selection of spotlight products!
+          </p>
+          <a href="">See More</a>
+        </div>
+      </div>
+
+      <!-- <div class="appEcomm">
+        <div class="app">
+          <h3 class="appTitle">Download the new Ecomm App</h3>
+          <p class="appContent">
+            Experience the ultimate shopping convenience at your fingertips!
+            Download our app and enjoy exclusive discounts, easy checkout, and
+            personalized recommendations wherever you go.
+          </p>
+          <div class="btnApp">
+            <button class="btn btn-outline-primary">App Store</button>
+            <button class="btn btn-outline-primary">Google Play</button>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="appEcomm">
+        <div class="app">
+          <h3 class="appTitle">Download the New Ecomm App</h3>
+          <p class="appContent">
+            Experience the ultimate shopping convenience at your fingertips!
+            Download our app and enjoy exclusive discounts, easy checkout, and
+            personalized recommendations wherever you go.
+          </p>
+          <div class="btnApp">
+            <button class="btn btn-outline-primary">
+              <i class="fa-brands fa-apple"></i> App Store
+            </button>
+            <button class="btn btn-outline-primary">
+              <i class="fa-brands fa-google"></i>Google Play
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="new_footer_area bg_color">
+      <div class="new_footer_top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <div
+                class="f_widget company_widget wow fadeInLeft"
+                data-wow-delay="0.2s"
+                style="
+                  visibility: visible;
+                  animation-delay: 0.2s;
+                  animation-name: fadeInLeft;
+                "
+              >
+                <h3 class="f-title f_600 t_color f_size_18">Get in Touch</h3>
+                <p>
+                  Don’t miss any updates of our new templates and extensions.!
+                </p>
+                <form
+                  action="#"
+                  class="f_subscribe_two mailchimp"
+                  method="post"
+                  novalidate="true"
+                  _lpchecked="1"
+                >
+                  <input
+                    type="text"
+                    name="EMAIL"
+                    class="form-control memail"
+                    placeholder="Email"
+                  />
+                  <button class="btn btn_get btn_get_two" type="submit">
+                    Subscribe
+                  </button>
+                  <p class="mchimp-errmessage" style="display: none"></p>
+                  <p class="mchimp-sucmessage" style="display: none"></p>
+                </form>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div
+                class="f_widget about-widget pl_70 wow fadeInLeft"
+                data-wow-delay="0.4s"
+                style="
+                  visibility: visible;
+                  animation-delay: 0.4s;
+                  animation-name: fadeInLeft;
+                "
+              >
+                <h3 class="f-title f_600 t_color f_size_18">Download</h3>
+                <ul class="list-unstyled f_list">
+                  <li><a href="#">Services</a></li>
+                  <li><a href="#">Contact Us</a></li>
+                  <!-- <li><a href="#">ios App</a></li> -->
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div
+                class="f_widget about-widget pl_70 wow fadeInLeft"
+                data-wow-delay="0.6s"
+                style="
+                  visibility: visible;
+                  animation-delay: 0.6s;
+                  animation-name: fadeInLeft;
+                "
+              >
+                <h3 class="f-title f_600 t_color f_size_18">Help</h3>
+                <ul class="list-unstyled f_list">
+                  <li><a href="#">FAQ</a></li>
+                  <li><a href="#">Term &amp; conditions</a></li>
+                  <li><a href="#">Reporting</a></li>
+                  <li><a href="#">Documentation</a></li>
+                  <li><a href="#">Support Policy</a></li>
+                  <li><a href="#">Privacy</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div
+                class="f_widget social-widget pl_70 wow fadeInLeft"
+                data-wow-delay="0.8s"
+                style="
+                  visibility: visible;
+                  animation-delay: 0.8s;
+                  animation-name: fadeInLeft;
+                "
+              >
+                <h3 class="f-title f_600 t_color f_size_18">Team Solutions</h3>
+                <div class="f_social_icon">
+                  <a href="#" class="fab fa-facebook"></a>
+                  <a href="#" class="fab fa-twitter"></a>
+                  <a href="#" class="fab fa-linkedin"></a>
+                  <a href="#" class="fab fa-pinterest"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer_bg">
+          <div class="footer_bg_one"></div>
+          <div class="footer_bg_two"></div>
+        </div>
+      </div>
+      <div class="footer_bottom">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-lg-6 col-sm-7">
+              <p class="mb-0 f_400">© 2024 All rights reserved.</p>
+            </div>
+            <div class="col-lg-6 col-sm-5 text-right">
+              <p>
+                Made with <i class="icon_heart"></i> in
+                <!-- <a href="http://cakecounter.com" target="_blank">CakeCounter</a> -->
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const fetchItems = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          // if (!token) {
+          //   alert("You must login to continue");
+          //   window.location.href = "#";
+          // }
+
+          const repsonse = await fetch("http://localhost:3003/products");
+          const data = await repsonse.json();
+          // console.log(data);
+
+          const productsItemsContainer = document.getElementById("productItem");
+          productsItemsContainer.innerHTML = "";
+
+          if (data.length === 0) {
+            productsItemsContainer.innerHTML = `
+              <div class="col-12 text-center">
+                            <p>No products available.</p>
+                        </div>
+            `;
+          }
+          data.forEach((item) => {
+            productsItemsContainer.innerHTML += `
+                <div class="slide">
+                  <img src="../backend/uploads/${item.image_url}" alt="Image 1" />
+                  <div class="caption">${item.name}</div>
+                </div>
+            `;
+          });
+        } catch (error) {
+          console.error("Error feteching Items", error);
+        }
+      };
+      document.addEventListener("DOMContentLoaded", fetchItems);
+    </script>
+  </body>
+</html>

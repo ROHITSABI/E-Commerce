@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      $(function () {
+        $("#nav-placeholder").load("navbarHome.html");
+      });
+
+      $(function () {
+        $("#nav-footer").load("footer.html");
+      });
+    </script>
+
+    <style>
+      .container {
+        /* background-color: whitesmoke; */
+        padding: 0 12px;
+        margin-top: 0;
+      }
+      .card {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card img {
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .card:hover img {
+        transform: scale(1.1);
+      }
+
+      .overlay-details {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .card:hover .overlay-details {
+        opacity: 1;
+      }
+
+      .overlay-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .overlay-text {
+        margin: 5px 0;
+      }
+      .card img {
+        transform: translate(-1px, 10px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav-placeholder"></div>
+    <div class="container">
+      <div
+        id="welcomeMessage"
+        style="
+          font-size: 40px;
+          font-weight: 600;
+          color: orange;
+          font-style: italic;
+        "
+      ></div>
+      <div
+        class="alert alert-warning alert-dismissible fade show"
+        role="alert"
+        id="showMsg"
+        style="display: none"
+      >
+        <strong>Holy guacamole!</strong> You should check in on some of those
+        fields below.
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      <h1>Products</h1>
+      <div id="productsContainer" class="row">
+        <!-- Products will be dynamically loaded here -->
+      </div>
+    </div>
+
+    <div id="nav-footer"></div>
+
+    <script>
+      const showMessage = document.getElementById("showMsg");
+      function displayMsg(message, type) {
+        showMsg.textContent = message;
+        showMsg.className = `alert alert-${type} alert-dismissible fade show`;
+        showMsg.style.display = "block";
+        setTimeout(() => {
+          showMsg.style.display = "none";
+        }, 4000);
+      }
+      const fetchProducts = async () => {
+        try {
+          // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
+          if (!token) {
+            // alert("You must log in to view the products.");
+            displayMsg("You must log in to view the products.", "danger");
+            window.location.href = "/frontend/user/login.html";
+            return;
+          }
+
+          // Decode token to get userId
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const userId = decodedToken.id;
+
+          // Fetch products
+          const response = await fetch("http://localhost:3003/products");
+          const products = await response.json();
+
+          const productsContainer =
+            document.getElementById("productsContainer");
+          productsContainer.innerHTML = "";
+
+          if (products.length === 0) {
+            productsContainer.innerHTML = `
+                        <div class="col-12 text-center">
+                            <p>No products available.</p>
+                        </div>
+                    `;
+            return;
+          }
+
+          // Render each product
+          products.forEach((product) => {
+            productsContainer.innerHTML +=
+              //Remove
+              `                        
+                <div class="col-md-4 mb-4" id="product-${product.id}">
+                  <div class="card" style="width: 20rem; height:20rem; position: relative; overflow: hidden;">
+                    <img style="height: 100%; object-fit: cover;" src="../../backend/uploads/${product.image_url}" class="card-img-top" alt="${product.name}">
+                    <div class="overlay-details">
+                      <h5 class="overlay-title">${product.name}</h5>
+                      <p class="overlay-text">${product.description}</p>
+                      <p class="overlay-text">Price: $${product.price}</p>
+                      <p class="overlay-text">
+                        Quantity: <input type="number" value="1" min="1" style="width: 50px;">
+                      </p>
+                      <button class="btn btn-primary" onclick="addToCart(${product.id}, ${userId})">
+                        Add to Cart
+                      </button>
+                  </div>
+                </div>
+              </div>
+                    `;
+          });
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+      //Ok
+
+      //To display the user name in products page
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            // alert("You must log in to view this page.");
+            displayMsg("You must log in to view this page.", "danger");
+            window.location.href = "login.html";
+            return;
+          }
+
+          // Decode the token to extract userId
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const userId = decodedToken.id;
+
+          // Fetch user details
+          const response = await fetch(
+            // `http://localhost:3003/api/id?id=${userId}`
+            `http://localhost:3003/api/users/id?id=${userId}`
+          );
+          console.log(response);
+          if (!response.ok) {
+            throw new Error("Failed to fetch user details");
+          }
+
+          const userData = await response.json();
+          document.getElementById(
+            "welcomeMessage"
+          ).textContent = `Hello, ${userData.name}!`;
+
+          // Fetch products
+          // fetchProducts();
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      });
+
+      function updateCartCount() {
+        fetch("http://localhost:3003/api/cart/cart-count", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to fetch cart count");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const cartCount = data.count || 0;
+            document.getElementById(
+              "cart-count"
+            ).textContent = `(${cartCount})`;
+          })
+          .catch((error) => {
+            console.error("Error fetching cart count:", error);
+          });
+      }
+
+      // Call updateCartCount every 30 seconds
+      setInterval(updateCartCount, 30000);
+
+      // Also call it once on page load
+      // updateCartCount();
+
+      // Call this function on page load
+      document.addEventListener("DOMContentLoaded", updateCartCount);
+
+      const addToCart = async (productId, userId) => {
+        try {
+          const quantityInput = document.querySelector(
+            `#product-${productId} input[type="number"]`
+          );
+          const quantity = parseInt(quantityInput.value);
+
+          // console.log(quantity);
+          const token = localStorage.getItem("token");
+          const response = await fetch("http://localhost:3003/cart", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ productId, userId, quantity }),
+          });
+          const data = await response.json();
+
+          if (response.ok) {
+            // alert("Product added to cart successfully!");
+            displayMsg(data.message, "success");
+            updateCartCount();
+          } else {
+            const { message } = await response.json();
+            alert(`Error: ${message}`);
+          }
+        } catch (error) {
+          console.error("Error adding product to cart:", error);
+        }
+      };
+
+      // Load products on page load
+      document.addEventListener("DOMContentLoaded", fetchProducts);
+    </script>
+  </body>
+</html>

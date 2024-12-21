@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      $(function () {
+        $("#nav-placeholder").load("navbarHome.html");
+      });
+
+      $(function () {
+        $("#nav-footer").load("footer.html");
+      });
+    </script>
+    <style>
+      .cartTitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .container {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav-placeholder"></div>
+    <div class="container mt-5" style="padding: 2%">
+      <div
+        class="alert alert-warning alert-dismissible fade show"
+        role="alert"
+        id="showMsg"
+        style="display: none"
+      >
+        <strong>Holy guacamole!</strong> You should check in on some of those
+        fields below.
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="cartTitle">
+        <h1>Your Cart</h1>
+        <a href="checkout.html"
+          ><button class="btn btn-outline-primary">
+            Proceed to checkout...
+          </button></a
+        >
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cartItems">
+          <tr>
+            <td colspan="4" class="text-center">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- <div class="text-end mt-3">
+      <h4 id="grandTotal">Grand Total: $0.00</h4>
+    </div> -->
+
+    <div id="nav-footer" style="margin-top: 14rem"></div>
+
+    <script>
+      const showMsg = document.getElementById("showMsg");
+      function displayMsg(message, type) {
+        showMsg.textContent = message;
+        showMsg.className = `alert alert-${type} alert-dismissible fade show`;
+        showMsg.style.display = "block";
+        setTimeout(() => {
+          showMsg.style.display = "none";
+        }, 4000);
+      }
+
+      // Fetch cart items
+      const fetchCartItems = async () => {
+        try {
+          // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
+          if (!token) {
+            alert("You must log in to view your cart.");
+            window.location.href = "login.html";
+            return;
+          }
+
+          // Decode token to get userId
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          const userId = decodedToken.id;
+
+          // Fetch cart items
+          const response = await fetch(
+            `http://localhost:3003/cart/check/${userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          // Check if response is unauthorized
+          if (response.status === 401) {
+            alert("Access Denied: Invalid or expired token");
+            localStorage.removeItem("token");
+            window.location.href = "login.html"; // Redirect to login
+            return;
+          }
+          const cartItems = await response.json();
+          // console.log(cartItems);
+
+          const cartTableBody = document.getElementById("cartItems");
+          cartTableBody.innerHTML = "";
+
+          if (cartItems.length === 0) {
+            cartTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="text-center">Your cart is empty!</td>
+                        </tr>
+                    `;
+            return;
+          }
+
+          let grandTotal = 0;
+          cartItems.forEach((item) => {
+            // console.log(item.quantity);
+            const total = item.price * item.quantity;
+            grandTotal += total;
+            cartTableBody.innerHTML += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>
+                            <input type="#" min="1" value="${item.quantity}" onchange="updateQuantity(${item.card_id}, this.value)" class="form-control">
+                            </td>
+                            <td>${item.price}</td>
+                            <td>${total}</td>
+                            <td>
+                            <button class="btn btn-danger btn-sm" onclick="removeItem(${item.cart_id})">Remove</button>
+                        </td>
+                        </tr>
+                    `;
+          });
+          // document.getElementById(
+          //   "grandTotal"
+          // ).textContent = `Grand Total: ${grandTotal}`;
+
+          localStorage.setItem("grandTotal", grandTotal);
+        } catch (error) {
+          alert("An error occurred while fetching the cart items.");
+          console.error("Error fetching cart items:", error);
+        }
+      };
+
+      // const updateQuantity = async (cartItemId, quantity) => {
+      //   try {
+      //     const token = localStorage.getItem("token");
+      //     const response = await fetch("http://localhost:3003/cart/update", {
+      //       method: "PUT",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: `Bearer ${token}`,
+      //       },
+      //       body: JSON.stringify({ cartItemId, quantity }),
+      //     });
+
+      //     if (response.ok) {
+      //       alert("Quantity updated successfully.");
+      //       fetchCartItems();
+      //     } else {
+      //       const { message } = await response.json();
+      //       alert(`Error: ${message}`);
+      //     }
+      //   } catch (error) {
+      //     console.error("Error updating quantity:", error);
+      //   }
+      // };
+
+      const removeItem = async (cartItemId) => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(
+            `http://localhost:3003/cart/remove/${cartItemId}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            // alert("Item removed successfully.");
+            displayMsg(data.message, "success");
+            fetchCartItems();
+          } else {
+            const { message } = await response.json();
+            alert(`Error: ${message}`);
+          }
+        } catch (error) {
+          console.error("Error removing item:", error);
+        }
+      };
+
+      // Load cart items on page load
+      document.addEventListener("DOMContentLoaded", fetchCartItems);
+    </script>
+  </body>
+</html>

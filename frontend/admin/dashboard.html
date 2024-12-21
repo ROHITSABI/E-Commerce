@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      $(function () {
+        $("#nav-placeholder").load("adminNavbar.html");
+      });
+    </script>
+  </head>
+  <body>
+    <div id="nav-placeholder"></div>
+    <div class="container mt-5">
+      <h2 class="text-center">Admin Dashboard</h2>
+      <button class="btn btn-primary my-3" onclick="openAddProductForm()">
+        Add Product
+      </button>
+
+      <!-- Display the product -->
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productList"></tbody>
+      </table>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div
+      class="modal fade"
+      id="productModal"
+      tabindex="-1"
+      aria-labelledby="productModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productModalLabel">Add Product</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="productForm" enctype="multipart/form-data">
+              <!-- Hidden Id -->
+              <input type="hidden" id="productId" />
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" required />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="price" required />
+              </div>
+              <div class="mb-3">
+                <label for="imageUrl" class="form-label">Product Image</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="imageUrl"
+                  accept="image/*"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const productList = document.getElementById("productList");
+      const productForm = document.getElementById("productForm");
+
+      const productModal = new bootstrap.Modal(
+        document.getElementById("productModal")
+      );
+      const productModalLabel = document.getElementById("productModalLabel");
+
+      window.addEventListener("DOMContentLoaded", fetchProducts);
+
+      async function fetchProducts() {
+        try {
+          const response = await fetch("http://localhost:3003/products");
+          // console.log(response);
+
+          if (!response.ok) {
+            console.error("Failed to fetch products:", response.statusText);
+            throw new Error("Failed to fetch products");
+          }
+          const products = await response.json();
+          // console.log("Fetched products:", products);
+
+          productList.innerHTML = "";
+
+          products.forEach((product, index) => {
+            productList.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><img src="../../backend/uploads/${
+                          product.image_url
+                        }" alt="${product.name}" width="100" height="100"/></td>
+                        <td>${product.name}</td>
+                        <td>${product.description}</td>
+                        <td>${
+                          // !isNaN(product.price) ? product.price : "N/A"
+                          product.price
+                        }</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editProduct(${
+                              product.id
+                            })"><i class="fa-solid fa-pen-to-square" ></i></button>
+                            
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${
+                              product.id
+                            })"><i class="fa-solid fa-trash" ></i></button>
+                        </td>
+                    </tr>
+                `;
+          });
+          //   console.log("Updated product list:", productList.innerHTML);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      }
+
+      async function editProduct(productId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3003/products/${productId}`
+          );
+          // console.log(response);
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch product details");
+          }
+
+          const product = await response.json();
+          // console.log(product);
+
+          document.getElementById("productId").value = product.id;
+          document.getElementById("name").value = product.name;
+          document.getElementById("description").value = product.description;
+          document.getElementById("price").value = product.price;
+
+          //Make the image optional for updates
+          document.getElementById("imageUrl").removeAttribute("required");
+
+          productModalLabel.textContent = "Edit Product";
+          productModal.show();
+        } catch (error) {
+          console.error("Error fetching product", error);
+          return res.status(500).json({ error: "Error fetching product" });
+        }
+      }
+
+      //Add product for the user for purchasing it
+      // productForm.addEventListener("submit", async (e) => {
+      //   e.preventDefault();
+      //   const productId = document.getElementById("productId").value;
+
+      //   const formData = new FormData();
+      //   formData.append("name", document.getElementById("name").value);
+      //   formData.append(
+      //     "description",
+      //     document.getElementById("description").value
+      //   );
+      //   formData.append(
+      //     "price",
+      //     parseFloat(document.getElementById("price")).value
+      //   );
+
+      //   const imageFile = document.getElementById("imageUrl").files[0];
+      //   if (imageFile) {
+      //     formData.append("imageUrl", imageFile);
+      //   }
+
+      // if (productId) {
+      //   await fetch(`http://localhost:3003/products/${productId}`, {
+      //     method: "PUT",
+      //     body: formData,
+      //   });
+      // }
+
+      //   fetchProducts();
+      //   productModal.hide();
+      // });
+
+      async function deleteProduct(id) {
+        await fetch(`http://localhost:3003/products/${id}`, {
+          method: "DELETE",
+        });
+        fetchProducts();
+      }
+
+      //To add the product from the modals form
+      productForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Create a FormData object to send as multipart/form-data
+        const formData = new FormData();
+
+        formData.append("name", document.getElementById("name").value);
+        formData.append(
+          "description",
+          document.getElementById("description").value
+        );
+        formData.append(
+          "price",
+          parseFloat(document.getElementById("price").value)
+        );
+
+        // Append the file to FormData
+        formData.append(
+          "imageUrl",
+          document.getElementById("imageUrl").files[0]
+        );
+
+        // Call the function to add the product with form data (multipart)
+        addProduct(formData);
+      });
+
+      // Function to send the form data to the backend
+      async function addProduct(formData) {
+        await fetch("http://localhost:3003/products/add", {
+          method: "POST",
+          body: formData,
+        });
+        fetchProducts();
+        productModal.hide();
+      }
+
+      function openAddProductForm() {
+        productModalLabel.textContent = "Add Product";
+        productForm.reset();
+        productModal.show();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .container {
+        margin-top: 50px;
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+      .btn-primary {
+        width: 100%;
+      }
+      .orderSummary {
+        float: left;
+        width: 300px;
+        /* height: 650px; */
+        /* border: 1px solid black; */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+          0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        margin-left: 2%;
+        margin-top: 4%;
+        padding: 12px 10px;
+      }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      $(function () {
+        $("#nav-placeholder").load("navbarHome.html");
+      });
+
+      $(function () {
+        $("#nav-footer").load("footer.html");
+      });
+    </script>
+  </head>
+  <body>
+    <div id="nav-placeholder"></div>
+    <div class="orderSummary">
+      <h3 class="OrderTitle">Order Summary</h3>
+      <!-- <p class="item">Items: ..</p> -->
+      <p
+        class="orderTotal"
+        style="color: #b12704; font-size: 19px; font-weight: 550"
+      >
+        Order Total:
+      </p>
+    </div>
+
+    <div class="container" style="width: 50%">
+      <h2>Checkout</h2>
+      <form id="checkoutForm">
+        <div class="form-group mb-3">
+          <label for="address" class="form-label">Address:</label>
+          <input
+            type="text"
+            id="address"
+            class="form-control"
+            placeholder="Enter your address"
+            required
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="city" class="form-label">City:</label>
+          <input
+            type="text"
+            id="city"
+            class="form-control"
+            placeholder="Enter your city"
+            required
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="postal_code" class="form-label">Postal Code:</label>
+          <input
+            type="text"
+            id="postal_code"
+            class="form-control"
+            placeholder="Enter your postal code"
+            required
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="country" class="form-label">Country:</label>
+          <input
+            type="text"
+            id="country"
+            class="form-control"
+            placeholder="Enter your country"
+            required
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="phone_number" class="form-label">Phone Number:</label>
+          <input
+            type="text"
+            id="phone_number"
+            class="form-control"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        <!-- ========================== -->
+        <!-- Payment Method -->
+        <h4>Payment Method</h4>
+        <div class="form-group mb-3">
+          <label for="paymentMethod" class="form-label"
+            >Choose Payment Method:</label
+          >
+          <select id="paymentMethod" class="form-select" required>
+            <option value="card">Credit/Debit Card</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </div>
+
+        <!-- Card Details (conditionally rendered) -->
+        <div id="cardDetails" class="mb-3" style="display: none">
+          <div class="form-group">
+            <label for="cardNumber" class="form-label">Card Number:</label>
+            <input
+              type="text"
+              id="cardNumber"
+              class="form-control"
+              placeholder="Enter your card number"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cardExpiry" class="form-label">Expiry Date:</label>
+            <input
+              type="text"
+              id="cardExpiry"
+              class="form-control"
+              placeholder="MM/YY"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cardCVC" class="form-label">CVC:</label>
+            <input
+              type="text"
+              id="cardCVC"
+              class="form-control"
+              placeholder="CVC"
+            />
+          </div>
+        </div>
+
+        <!-- ========================== -->
+
+        <button type="submit" class="btn btn-primary" style="width: 30%">
+          Place Order
+        </button>
+      </form>
+    </div>
+    <div id="nav-footer"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script>
+      document
+        .getElementById("checkoutForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const token = localStorage.getItem("token");
+          const formData = {
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            postal_code: document.getElementById("postal_code").value,
+            country: document.getElementById("country").value,
+            phone_number: document.getElementById("phone_number").value,
+          };
+
+          try {
+            const response = await fetch("http://localhost:3003/checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+              alert("Order placed successfully!");
+              window.location.href = "products.html";
+            } else {
+              const { message } = await response.json();
+              alert(`Error: ${message}`);
+            }
+          } catch (error) {
+            console.error("Error placing order:", error);
+          }
+        });
+    </script> -->
+
+    <script>
+      // Show/hide card details based on payment method
+      document
+        .getElementById("paymentMethod")
+        .addEventListener("change", function () {
+          const cardDetails = document.getElementById("cardDetails");
+          cardDetails.style.display = this.value === "card" ? "block" : "none";
+        });
+
+      // Handle form submission
+      document
+        .getElementById("checkoutForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const token = localStorage.getItem("token"); // Assume token is stored in localStorage
+          const formData = {
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+            postal_code: document.getElementById("postal_code").value,
+            country: document.getElementById("country").value,
+            phone_number: document.getElementById("phone_number").value,
+            payment_method: document.getElementById("paymentMethod").value,
+            card_details: {
+              number: document.getElementById("cardNumber").value,
+              expiry: document.getElementById("cardExpiry").value,
+              cvc: document.getElementById("cardCVC").value,
+            },
+          };
+
+          try {
+            const response = await fetch("http://localhost:3003/checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+              alert("Order placed successfully!");
+              window.location.href = "products.html"; // Redirect to products page
+            } else {
+              const { message } = await response.json();
+              alert(`Error: ${message}`);
+            }
+          } catch (error) {
+            console.error("Error placing order:", error);
+            alert("Something went wrong. Please try again.");
+          }
+        });
+    </script>
+
+    <!-- To display the total amounts of the product (from local storage)-->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const grandTotal = localStorage.getItem("grandTotal") || 0;
+        const formattedTotal = Number(grandTotal).toLocaleString("en-US"); // Format with commas
+        document.querySelector(
+          ".orderTotal"
+        ).textContent = `Order Total: $${formattedTotal}`;
+      });
+    </script>
+  </body>
+</html>
